@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Form, FormGroup, Input, Label, Button } from "reactstrap";
+import { Form, FormGroup, Input, Label, Button, FormFeedback } from "reactstrap";
 
 const initialForm = {
   email: '',
@@ -10,7 +10,7 @@ const initialForm = {
 
 const errorMessages = {
   email: 'Please enter a valid email address',
-  password: 'Password must be at least 4 characters long',
+  password: 'Password must be strong',
 };
 
 export default function Login() {
@@ -92,9 +92,7 @@ export default function Login() {
         );
         if (user) {
           setForm(initialForm);
-          history.push('/main');
-        } else {
-          history.push('/error');
+
         }
       });
   };
@@ -115,6 +113,7 @@ export default function Login() {
             value={form.email}
             invalid={errors.email}
           />
+          {errors.email && <FormFeedback>{errorMessages.email}</FormFeedback>}
         </FormGroup>
         <FormGroup>
           <Label for="examplePassword">
@@ -129,6 +128,9 @@ export default function Login() {
             value={form.password}
             invalid={errors.password}
           />
+          {errors.password && (
+            <FormFeedback>{errorMessages.password}</FormFeedback>
+          )}
         </FormGroup>
         <FormGroup check>
           <Input type="checkbox" id="terms" name="terms" checked={form.terms} onChange={handleChange}
