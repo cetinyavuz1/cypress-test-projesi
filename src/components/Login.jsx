@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Form, FormGroup, Input, Label, Button, FormFeedback } from "reactstrap";
+import { useHistory } from "react-router-dom"
 
 const initialForm = {
   email: '',
@@ -10,7 +11,7 @@ const initialForm = {
 
 const errorMessages = {
   email: 'Please enter a valid email address',
-  password: 'Password must be strong',
+  password: 'Password must be at least 4 characters long',
 };
 
 export default function Login() {
@@ -21,6 +22,7 @@ export default function Login() {
     password: false,
     terms: false,
   })
+  const history = useHistory()
   const validateEmail = (email) => {
     return String(email)
       .toLowerCase()
@@ -29,18 +31,10 @@ export default function Login() {
       );
   };
 
-  const validatePassword = (password) => {
-    return String(password)
-      .toLowerCase()
-      .match(
-        /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/
-      );
-  };
-
   useEffect(() => {
     if (
       validateEmail(form.email) &&
-      validatePassword(form.password) &&
+      form.password.trim().length >= 4 &&
       form.terms
     ) {
       setIsValid(true);
@@ -92,7 +86,7 @@ export default function Login() {
         );
         if (user) {
           setForm(initialForm);
-
+          history.push("/Success")
         }
       });
   };
@@ -140,7 +134,7 @@ export default function Login() {
             I agree to terms of service and privacy policy
           </Label>
         </FormGroup>
-        <Button disabled={!isValid}>
+        <Button type="submit" disabled={!isValid}>
           Login
         </Button>
       </Form>
